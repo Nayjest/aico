@@ -1,5 +1,5 @@
 .idea
-.ai-microcore
+ai-microcore/*
 .env
-data
-.aico
+data/*
+.aico/*
