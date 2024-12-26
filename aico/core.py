@@ -1,4 +1,4 @@
-import aico.bootstrap
+from .bootstrap import AICO_USER_HOME, IN_AICO_MODULE_FOLDER
 import logging
 import microcore as mc
 from dataclasses import dataclass, field, asdict
@@ -28,11 +28,16 @@ class Context:
 
     @staticmethod
     def load():
-        params = mc.storage.read_json('context.json')
+        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else mc.storage(AICO_USER_HOME)
+        params = ctx_storage.read_json('context.json')
         params['project_root'] = Path(params['project_root'])
         params['code_review'] = CodeReviewSettings(**params.get('code_review', {}))
         params['generation'] = GenerationSettings(**params.get('generation', {}))
         return Context(**params)
+
+    def save(self):
+        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else mc.storage(AICO_USER_HOME)
+        ctx_storage.write_json('context.json', asdict(self), backup_existing=False)
 
 
 @dataclass
@@ -123,12 +128,20 @@ class Project:
 
     @staticmethod
     def make(name: str, **kwargs):
-        args = {
-            "src_folder": name,
-            "work_folder": f"{name}/{WORK_FOLDER}",
-            "ignore": DEFAULT_IGNORE,
-            **kwargs
-        }
+        if IN_AICO_MODULE_FOLDER:
+            args = {
+                "src_folder": name,
+                "work_folder": f"{name}/{WORK_FOLDER}",
+                "ignore": DEFAULT_IGNORE,
+                **kwargs
+            }
+        else:
+            args = {
+                "src_folder": f".",
+                "work_folder": f"{WORK_FOLDER}",
+                "ignore": DEFAULT_IGNORE,
+                **kwargs
+            }
         return Project(**args)
 
     def asdict(self):

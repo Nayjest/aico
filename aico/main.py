@@ -1,4 +1,4 @@
-from aico.bootstrap import app
+from aico.bootstrap import app, in_project_folder
 import threading
 import time
 import webbrowser
@@ -22,14 +22,14 @@ from rich.pretty import pprint
 
 @app.command()
 def use(project_name: str):
-    ctx = mc.storage.read_json('context.json')
-    ctx['project_root'] = project_name
+    ctx = Context.load()
+    ctx.project_root = project_name if not in_project_folder() else str(Path.cwd().resolve())
     p = Project.make(project_name)
     if not p.exists():
         mc.ui.error(f"Project \"{project_name}\" not found.")
         return
     print(f"Activating \"{project_name}\" project...")
-    mc.storage.write_json('context.json', ctx, backup_existing=False)
+    ctx.save()
 
     print(mc.utils.file_link(f"{p.src_path}"))
 
@@ -44,14 +44,32 @@ def use(project_name: str):
 @app.command(name='init', help="Alias of new-project", hidden=True)
 @app.command(help="Creates a new project and sets it as the current active project.")
 def new_project(
-        name: str = typer.Option(
-            ..., "--name", "-n", prompt="Enter project name", show_default=False
-        ),
-        git: bool = None
+        name: str="",# = typer.Option(
+        #    ..., "--name", "-n", prompt="Enter project name", show_default=False
+        #),
+        git: bool = None,
+        here: bool = None,
 ):
+    if in_project_folder():
+        mc.ui.error("Already in a project folder. Switching to it.")
+        use(Path.cwd().name)
+        return
+    if here is None:
+        if not in_project_folder():
+            here = mc.ui.ask_yn("Create project here?")
+    if here:
+        name = name or Path.cwd().name
     if not name:
         name = mc.ui.ask_non_empty("Enter project name: ")
-    p = Project.make(name)
+
+    params = {
+        "name": name,
+    }
+    if here:
+        params["src_folder"] = '.'
+        params["work_folder"] = WORK_FOLDER
+        mc.config().STORAGE_PATH = Path.cwd()
+    p = Project.make(**params)
     if p.exists():
         mc.ui.error(f"Project \"{name}\" already exists.")
         change = mc.ui.ask_yn(f"Switch to existing \"{name}\" project?", )
@@ -86,6 +104,19 @@ def describe():
     mc.storage.write_json(f'{env().project.work_folder}/meta.json', out.parse_json())
     print("Metadata saved")
     # mc.tpl('collect-meta.j2', input = mc.tpl('')).to_llm(
+
+@app.command()
+def status():
+    project()
+    try:
+        pprint(project())
+    except FileNotFoundError:
+        print(mc.utils.dedent(f"""
+        Status: {mc.ui.magenta('Not initialized.')}
+        \tenv file: {mc.config().DOT_ENV_FILE}
+        \tmodel: {mc.config().MODEL}
+        \tstorage: {mc.config().STORAGE_PATH}
+        """))
 
 
 @app.command()
