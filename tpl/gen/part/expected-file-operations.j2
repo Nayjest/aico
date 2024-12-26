@@ -1,0 +1,35 @@
+To describe a file to be saved, use the following format:
+[[BEGIN_FILE]]
+[FILE_PATH]
+Provide the file name with its relative path from the project root.
+[FILE_CONTENT]
+Full raw content of the file as it should be.
+Content of this section will be saved to file system as file.
+[[END_FILE]]
+
+
+Both [FILE_PATH] and [FILE_CONTENT] sections are required.
+
+To delete a file, use the following section:
+[[DELETE_FILE]]
+file name with its relative path from the project root
+[[END_DELETE_FILE]]
+
+Response formatting example:
+[[BEGIN_FILE]]
+[FILE_PATH]
+file1.py
+[FILE_CONTENT]
+print("I'm python script")
+[[END_FILE]]
+
+[[BEGIN_FILE]]
+[FILE_PATH]
+data/info.md
+[FILE_CONTENT]
+# Markdown document
+[[END_FILE]]
+
+[[DELETE_FILE]]
+tests/old_test.py
+[[END_DELETE_FILE]]

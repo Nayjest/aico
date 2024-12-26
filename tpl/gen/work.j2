@@ -1,0 +1,9 @@
+{{ project.bot_personality }}
+
+[[BEGIN_USER_REQUEST]]
+{{ query }}
+[[END_USER_REQUEST]]
+
+{% include("gen/part/work-context.j2") %}
+
+{% include('gen/part/expected-file-operations.j2') %}

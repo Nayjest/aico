@@ -1,0 +1,12 @@
+{% include "project/gen/file_names.j2" %}
+
+[[[BEGIN_PROJECT_FILES]]]
+{%- for f,c in project.files_content.items() %}
+[[BEGIN_FILE]]
+[FILE_PATH]
+{{ f }}
+[FILE_CONTENT]
+{{ c }}
+[[END_FILE]]
+{%- endfor %}
+[[[END_PROJECT_FILES]]]

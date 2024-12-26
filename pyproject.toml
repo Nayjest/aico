@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "seniorai"
+version = "0.1.0"
+description = "AI coding assistant"
+authors = ["Nayjest <mail@vitaliy.in>"]
+readme = "README.md"
+packages = [
+    { include="aico", from="." },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+aico = "aico.main:app"

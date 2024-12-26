@@ -1,0 +1,29 @@
+{% include "part/you.j2" %}
+
+=== ABOUT PROJECT ===
+
+{% include "project/meta-main.j2" %}
+
+=== TASK ===
+
+{{ task }}
+
+=== SUBJECT ===
+
+[[TARGET_FILE_NAME]]
+{{ file_name }}
+[[BEGIN_TARGET_FILE_CONTENT]]
+{{ project.files_content[file_name] }}
+[[END_TARGET_FILE_CONTENT]]
+
+=== REQUIREMENTS ===
+
+Your answer should contain full content of the updated file as follows:
+[[BEGIN_NEW_FILE_CONTENT]]
+file content here
+[[END_FILE_CONTENT]]
+
+Preserve file formatting of the original file.
+Do not introduce any other changes excepting what was asked in task.
+Ensure that the differences between the original and updated file are as minimal as possible
+(your answer will be processed by diff tool to generate a patch).

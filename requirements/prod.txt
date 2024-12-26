@@ -1,0 +1,5 @@
+chromadb
+ai-microcore
+patch
+Flask==2.1.2
+rich

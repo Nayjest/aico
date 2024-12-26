@@ -1,0 +1,98 @@
+{% include "part/you.j2" %}
+
+=== ABOUT PROJECT ===
+
+{% include "project/meta-main.j2" %}
+
+=== TASK ===
+{% include "part/do-code-review.j2" %}
+DO NOT REMOVE LAST EMPTY LINE FROM THE FILE
+
+=== SUBJECT ===
+
+[[TARGET_FILE_NAME]]
+{{ file_name }}
+[[BEGIN_TARGET_FILE_CONTENT]]
+{{ project.files_content[file_name] }}
+[[END_TARGET_FILE_CONTENT]]
+
+=== REQUIREMENTS ===
+
+Your response will be processed by the program, so strictly follow next instructions to provide the valid response.
+
+Describe your changes separately, split them into separate items defined by:
+
+[[---ITEM_BEGIN---]]
+...
+[[---ITEM_END---]]
+
+Your response can be "[[---NO_CHANGES---]]" or contain one or more items as described below:
+
+Each item should contain following sections:
+[[MESSAGE]]
+Short description of your changes, will be used as commit message if changes will be accepted. Leave empty if no changes
+[[UPDATED_FILE_CONTENT]]
+File content of target file (see BEGIN_TARGET_FILE_CONTENT) updated with change described in message section of current item.
+Critically Important!!! Avoid adding changes from other items on the top of previous in UPDATED_FILE_CONTENT.
+Keep everything except described in related message as it was in original file content.
+Do not mix changes of different items in one UPDATED_FILE_CONTENT section!!!
+
+Additional notes:
+
+- Each section header should be on separate line and start with [[ and end with ]]
+
+- Avoid changing the same line in file from different items.
+
+- Preserve last empty line in updated file content if it was in original file.
+
+=== EXAMPLE ===
+
+Let's assume we have the following file:
+[[TARGET_FILE_NAME]]
+funcs/provide_default_ext.py
+[[BEGIN_TARGET_FILE_CONTENT]]
+def provide_default_ext(fn: str, default_ext='.txt'):
+    if "." in fn:
+        parts = fn.split(".")
+        name = ".".join(parts[:-1])
+        ext = "." + parts[-1]
+    else:
+        ext = default_ext
+    return f"{name}.{ext}"
+
+[[END_TARGET_FILE_CONTENT]]
+
+Here how response should look like:
+[[---ITEM_BEGIN---]]
+[[MESSAGE]]
+Initialize 'name' in the else branch to fix the undefined name error
+[[UPDATED_FILE_CONTENT]]
+def provide_default_ext(fn: str, default_ext='.txt'):
+    if "." in fn:
+        parts = fn.split(".")
+        name = ".".join(parts[:-1])
+        ext = "." + parts[-1]
+    else:
+        name = fn
+        ext = default_ext
+    return f"{name}.{ext}"
+
+[[---ITEM_END---]]
+[[---ITEM_BEGIN---]]
+[[MESSAGE]]
+Remove extra dot in extension concatenation
+[[UPDATED_FILE_CONTENT]]
+def provide_default_ext(fn: str, default_ext='.txt'):
+    if "." in fn:
+        parts = fn.split(".")
+        name = ".".join(parts[:-1])
+        ext = "." + parts[-1]
+    else:
+        ext = default_ext
+    return f"{name}{ext}"
+
+[[---ITEM_END---]]
+
+Now start your work and provide response with results according to requirements.
+Keep in mind, separate UPDATED_FILE_CONTENT equals separate isolated change,
+each UPDATED_FILE_CONTENT should be based strictly on TARGET_FILE_CONTENT regardless of UPDATED_FILE_CONTENT in other items.

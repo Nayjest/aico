@@ -1,0 +1,54 @@
+{% include "part/you.j2" %}
+
+=== ABOUT PROJECT ===
+
+{% include "project/meta-main.j2" %}
+
+=== TASK ===
+
+Given the following results from an AI-powered code review,
+evaluate each change based on specific criteria and recommend whether to accept or reject each proposal.
+Your main goal is to filter out poor changes that are AI hallucinations, have no sense, may introduce bugs or compatibility issues,
+have high possibility of being rejected by a human reviewer, or are otherwise not worth the time of a human reviewer.
+
+Use the following criteria for evaluation:
+- Possible Bugs: Identify any potential bugs introduced by the changes.
+- Compatibility and Dependency Management: Ensure the changes do not introduce compatibility issues with existing code or dependencies.
+- Documentation and Comments: Evaluate the adequacy and accuracy of documentation and comments accompanying the changes.
+- Alignment with Project Goals and Scope: Ensure changes align with the overall objectives and scope of the project.
+- Adherence to Project-Specific Standards and Conventions, Consistency with Existing Codebase: Check if the suggestions follow the coding standards, naming conventions, and architectural patterns established in the project. Ensure that the changes maintain consistency with the existing codebase in terms of style, structure, and level of abstraction.
+- Verify the practicality of the implementations.
+- Avoidance of Over-Engineering
+- Benefit vs. Effort Analysis: Consider the benefit-to-effort ratio.
+- Maintainability and Readability: Evaluate if the changes improve or hinder the maintainability and readability of the code.
+- Check for unnecessary redundancy or duplication in the AI's suggestions.
+- Pay attention to vague or irrelevant things
+- Be aware of any performance implications of the suggested changes.
+Compliance with Security Best Practices:
+- Review the suggestions for compliance with security best practices, security vulnerabilities.
+- Consider if the changes align with the broader community and ecosystem norms, especially in open-source projects.
+
+For each item in the code review, provide a brief evaluation and a decision to 'Accept' or 'Reject' based on these criteria.
+
+=== TARGET FILE ===
+
+[[TARGET_FILE_NAME]]
+{{ file_name }}
+[[BEGIN_TARGET_FILE_CONTENT]]
+{{ project.files_content[file_name] }}
+[[END_TARGET_FILE_CONTENT]]
+
+=== CHANGES SUGGESTED BY AI ===
+
+{{ data }}
+
+=== REQUIREMENTS ===
+
+Respond with valid JSON from the AI-powered code review in CHANGES SUGGESTED BY AI section, containing same data, enrich each item inside "changes" section with "estimation" field
+containing JSON object with results of your work.
+Each estimation should contain following fields:
+- "decision": "Accept" or "Reject"
+- "comment": your comment about the change
+- "value": integer value from 0 to 100, where 0 is "completely wrong" and 100 is "completely must have change"
+- "risk": integer value from 0 to 100, where 0 is "no risk" and 100 is "high risk" of introducing bugs or issues
+- "chance_accepted": integer value from 0 to 100, where 0 is "no chance" and 100 is "high chance" of being accepted by human reviewer

@@ -1,0 +1,106 @@
+{% include "part/you.j2" %}
+
+=== ABOUT PROJECT ===
+
+{% include "project/meta-main.j2" %}
+
+=== TASK ===
+{% include "part/do-code-review.j2" %}
+
+=== SUBJECT ===
+
+[[TARGET_FILE_NAME]]
+{{ file_name }}
+[[BEGIN_TARGET_FILE_CONTENT]]
+{{ project.files_content[file_name] }}
+[[END_TARGET_FILE_CONTENT]]
+
+=== REQUIREMENTS ===
+
+Your response will be processed by the program, so strictly follow next instructions to provide the valid response.
+
+Describe your changes separately, split them into separate items defined by:
+
+[[---ITEM_BEGIN---]]
+...
+[[---ITEM_END---]]
+
+Your response can be "[[---NO_CHANGES---]]" or contain one or more items as described below:
+
+Each item should contain following sections:
+[[SHORT_INFO]]
+Short description of specific change/improvement/fix.
+It will be used as commit message if changes will be accepted.
+[[IMPLEMENTATION_DETAILS]]
+Specific implementation of suggested change.
+For the person who will apply your changes, this should be a complete, laconic, explicit description of what needs to be done
+having the original contents of the file in front.
+[[TYPE]]
+Type of change
+[[MOTIVATION]]
+Motivation for change
+[[DRAWBACKS]]
+Potential issues, risks, drawbacks of change (if any) (OPTIONAL)
+
+---
+Additional notes:
+
+- Each section header should be on separate line and start with [[ and end with ]]
+
+=== EXAMPLE ===
+
+Let's assume we have the following file:
+[[TARGET_FILE_NAME]]
+funcs/provide_default_ext.py
+[[BEGIN_TARGET_FILE_CONTENT]]
+def provide_default_ext(fn: str, default_ext='.txt'):
+    if "." in fn:
+        parts = fn.split(".")
+        name = ".".join(parts[:-1])
+        ext = "." + parts[-1]
+    else:
+        ext = default_ext
+    return f"{name}.{ext}"
+
+[[END_TARGET_FILE_CONTENT]]
+
+Here how response should look like:
+[[---ITEM_BEGIN---]]
+[[SHORT_INFO]]
+Initialize 'name' in the else branch to fix the undefined name error
+[[IMPLEMENTATION_DETAILS]]
+Add
+```python
+name = fn
+```
+Before:
+```python
+ext = default_ext
+```
+[[TYPE]]
+Bug fix
+[[MOTIVATION]]
+Fix the undefined name error
+[[---ITEM_END---]]
+[[---ITEM_BEGIN---]]
+[[SHORT_INFO]]
+Remove extra dot in extension concatenation
+[[IMPLEMENTATION_DETAILS]]
+def provide_default_ext(fn: str, default_ext='.txt'):
+Replace
+```python
+return f"{name}.{ext}"
+```
+to:
+```python
+return f"{name}{ext}"`
+```
+[[TYPE]]
+Bug fix
+[[MOTIVATION]]
+Remove extra dot in extension concatenation
+[[DRAWBACKS]]
+May break backward compatibility
+[[---ITEM_END---]]
+
+Now start your work and provide response with results according to requirements.

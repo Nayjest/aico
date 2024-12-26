@@ -1,0 +1,10 @@
+{% include "project/file_names.j2" %}
+=====SOURCES_BEGIN=====
+{%- for f,c in project.files_content.items() %}
+===FILE_NAME===
+{{ f }}
+===FILE_CONTENT===
+{{ c }}
+===FILE_END===
+{%- endfor %}
+=====SOURCES_END=====

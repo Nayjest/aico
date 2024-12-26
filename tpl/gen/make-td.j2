@@ -1,0 +1,17 @@
+Here is the user request:
+[[BEGIN_USER_REQUEST]]
+{{ query }}
+[[END_USER_REQUEST]]
+
+{% include("gen/part/work-context.j2") %}
+
+Provide a clear and laconic technical description of task from the user request.
+If context of what user asks is not clear, see previous steps.
+Ensure that you describe exactly what user wants to do.
+Logic of technical description should be equivalent to the logic of user request.
+Your response will be used as input in AI code generator.
+Respond with valid JSON object containing following fields:
+{
+    "query": str, # initial user query
+    "technical_task_description": str # technical task description based on user query
+}

@@ -1,0 +1,16 @@
+Your response will be processed by the API, you should respond strictly using following template:
+[[RESULT]]
+<result: NO_CHANGES | HAS_CHANGES>
+[[MESSAGE]]
+<message: str>
+[[FILE_CONTENT]]
+<file_content: text>
+[[DIFF]]
+<diff>
+[[END]]
+
+Description of parameters:
+<result>: if you don't suggest any changes to this file, put NO_CHANGES to result, otherwise use HAS_CHANGES
+<message>: Short description of your changes, will be used as commit message if changes will be accepted. Leave empty if no changes
+<file_content>: Full updated source code with preserved indentation and formatting, leave empty if no changes
+<diff>: valid git patch file content that can be applied as patch using git apply

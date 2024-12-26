@@ -1,0 +1,22 @@
+{% set meta = project.meta %}
+
+Project / package information:
+{% if meta.name %}
+Name: {{ meta.name }}
+{% endif %}
+
+{% if meta.description %}
+Short package description: {{ meta.description }}
+{% endif %}
+
+{% if meta.lang %}
+Main programming language: {{ meta.lang }}
+{% endif %}
+
+{% if meta.lang_versions %}
+Supported language versions: {{ meta.lang_versions }}
+{% endif %}
+
+{% if meta.main_dependencies %}
+Used packages/libraries: {{ ','.join(meta.main_dependencies) }}
+{% endif %}

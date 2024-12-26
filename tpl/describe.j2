@@ -1,0 +1,15 @@
+Collect meta-information about this software project sources.
+You should include all main information important for software developers and contributors who will develop this package.
+Main purpose of this meta-information is t be used with AI code generation and code review tools baled on large language models.
+{% include "project/files.j2" %}
+ANSWER ONLY WITH VALID JSON OBJECT CONTAINING PROJECT METADATA
+Following fields are required:
+- "name": str -- Name of the project
+- "lang": str -- Main programming language of the project
+- "lang_versions": Optional[str] -- Supported language versions if information is available
+- "description": str -- Short description of the project
+- "main_dependencies": list[str] -- List of main libraries/packages used in the project
+- "dev_dependencies": list[str] -- List of libraries/packages used in the project in addition to main package for usage during development
+- "env_preparation": str -- Console commands to prepare environment for tests if you are in project folder for the first time
+- "tests_command": str -- Command to run tests if available
+- "ignore": list[str] -- List of files and directories to ignore when doing automated code review (like logs, git repository files, temp files, files of 3rd-party applications, cache, etc)

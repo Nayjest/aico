@@ -1,0 +1,14 @@
+{% if project.files %}
+{% include("project/gen/files.j2") %}
+
+
+This files was created by the following user requests:
+[[BEGIN_LIST_STEPS]]
+{% for step in steps %}
+[STEP]
+{{ step.query }}
+{%- endfor %}
+[[END_LIST_STEPS]]
+
+{% endif %}
+

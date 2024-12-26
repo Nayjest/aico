@@ -1,0 +1,69 @@
+{% include "part/you.j2" %}
+-----
+{% include "project/meta-main.j2" %}
+----- TASK
+Respond with results of your work on following file:
+[[FILE_NAME]]
+{{ file_name }}
+[[BEGIN_FILE_CONTENT]]
+{{ project.files_content[file_name] }}
+[[END_FILE_CONTENT]]
+
+Make code review. Take a depth breeze and deeply analyze this code.
+Pay attention to different aspects of code.
+Interpret it and test in your mind.
+Find possible optimisations, way to make code more beautiful and clear.
+Fix mistakes.
+Correct spelling and grammar errors.
+Find ways to make code more accurate, more laconic and elegant.
+Follow best practices and industry coding standards.
+Apply fixes and improvements if you may suggest definitely useful changes that will be highly possible accepted.
+Always evaluate the drawbacks of the changes you propose and suggest only changes that provides benefits from all points of view.
+
+
+REQUIREMENTS
+
+Your response will be processed by the program, so strictly follow next instructions to provide the valid response.
+
+Describe your changes separately, split them into separate items defined by
+[[---ITEM_BEGIN---]]
+...
+[[---ITEM_END---]]
+
+Your response can be "[[---NO_CHANGES---]]" or contain one or more items as described below.
+
+Each item should contain following sections:
+[[MESSAGE]]
+Short description of your changes, will be used as commit message if changes will be accepted. Leave empty if no changes
+[[DIFF]]
+Changes in valid Unified diff format
+
+In case of no changes needed, your answer should be:
+[[---NO_CHANGES---]]
+
+Each section header should be on separate line and start with [[ and end with ]]
+
+Response example:
+[[[---ITEM_BEGIN---]]]
+[[MESSAGE]]
+Avoid loading entire dataset into memory at once
+[[DIFF]]
+--- data_processing.py
++++ data_processing.py
+@@ -22,3 +22,4 @@
+- for row in read_dataset("large_file.csv"):
++ with open("large_file.csv") as file:
++     for row in csv.reader(file):
+      process_row(row)
+[[---ITEM_END---]]
+[[---ITEM_BEGIN---]]
+[[MESSAGE]]
+Fix mutable default argument in function
+[[DIFF]]
+--- utils.py
++++ utils.py
+@@ -4,2 +4,2 @@
+-def add_item_to_list(item, item_list=[]):
++def add_item_to_list(item, item_list=None):
+     if item_list is None:
+[[---ITEM_END---]]

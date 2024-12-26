@@ -1,0 +1,9 @@
+-r tests.txt
+flake8
+black
+build
+twine
+pylint
+pdoc
+watchdog
+pyflakes
