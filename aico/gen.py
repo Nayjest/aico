@@ -16,7 +16,7 @@ def rollback_files():
     from .backup import rollback_src_folder
     path = rollback_src_folder()
 
-@app.command()
+@app.command(help="Rolls back last step, restores files and deletes backup")
 def rollback():
     wd = project().work_data
     step = wd["steps"][-1]
@@ -30,6 +30,12 @@ def rollback():
     backup_path = step["created_backup"]
     print(f"Deleting backup {backup_path}")
     mc.storage.delete(backup_path)
+    return step
+
+@app.command(help="Redo last step")
+def redo():
+    last_step = rollback()
+    work(last_step['query'])
 
 
 @dataclass
