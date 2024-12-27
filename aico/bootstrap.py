@@ -41,9 +41,9 @@ def bootstrap():
         STORAGE_PATH=determine_storage_path(),
         USE_LOGGING=False,
         DOT_ENV_FILE=find_env_file(),
-        LLM_DEFAULT_ARGS={
-            'temperature': 0.2,
-        },
+        # LLM_DEFAULT_ARGS={
+        #     'temperature': 0.2,
+        # },
         PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
     )
     return app
