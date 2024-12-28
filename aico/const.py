@@ -11,4 +11,7 @@ DEFAULT_IGNORE = [
     ".pylintrc",
     '.diff',
     '.patch',
+    'node_modules',
+    'package-lock.json',
+    'dist',
 ]

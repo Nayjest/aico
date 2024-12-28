@@ -93,15 +93,16 @@ def new_project(
     print(f"Done.")
 
 @app.command()
+@app.command(name='files-list',hidden=True)
 def list_files():
-    rich.print(env().project.files)
+    rich.print(project().files)
 
 
 @app.command()
 def describe():
-    q = mc.tpl('describe.j2', project=env().project)
+    q = mc.tpl('describe.j2', project=project())
     out = mc.llm(q, callback=lambda text: print(text, end=''))
-    mc.storage.write_json(f'{env().project.work_folder}/meta.json', out.parse_json())
+    mc.storage.write_json(f'{project().work_folder}/meta.json', out.parse_json())
     print("Metadata saved")
     # mc.tpl('collect-meta.j2', input = mc.tpl('')).to_llm(
 
@@ -121,11 +122,11 @@ def status():
 
 @app.command()
 def improve():
-    files = env().project.files
+    files = project().files
     print(files)
 
     out = ""
-    for f, c in env().project.files_content.items():
+    for f, c in project().files_content.items():
         out += "====== FILE: " + f + ":\n"
         out += c + "\n"
 
@@ -139,7 +140,7 @@ def improve():
 @app.command()
 def files():
     mc.configure(STORAGE_PATH='data', USE_LOGGING=False)
-    files_list = env().project.not_empty_files
+    files_list = project().not_empty_files
     outs = {}
     i = 0
     for file_name in files_list:
@@ -154,15 +155,15 @@ def files():
         except Exception as e:
             mc.ui.error(f"Error: {e}")
             raise e
-        mc.storage.write_json(f'{env().project.work_folder}/files_out.json', outs, rewrite_existing=True)
-    mc.storage.write_json(f'{env().project.work_folder}/files_out.json', outs, rewrite_existing=True)
+        mc.storage.write_json(f'{project().work_folder}/files_out.json', outs, rewrite_existing=True)
+    mc.storage.write_json(f'{project().work_folder}/files_out.json', outs, rewrite_existing=True)
 
 
 def choose_file_if_needed(file_name: str):
-    if not file_name or file_name not in env().project.not_empty_files:
+    if not file_name or file_name not in project().not_empty_files:
         if file_name:
             print(f"{C.RED} File {file_name} not exists, choose another")
-        file_name = mc.ui.ask_choose("Choose file", env().project.files)
+        file_name = mc.ui.ask_choose("Choose file", project().files)
     return file_name
 
 
@@ -175,8 +176,8 @@ def file(file_name: str = typer.Argument(None)):
 
 @app.command()
 def files_ms(apply: bool = typer.Option(True, help="Apply changes to project files")):
-    files_list = env().project.not_empty_files
-    out_dir = Path(env().project.work_folder) / 'out'
+    files_list = project().not_empty_files
+    out_dir = Path(project().work_folder) / 'out'
     mc.storage.clean(out_dir)
 
     for file_name in files_list:
@@ -204,7 +205,7 @@ def file_ms(file_name: str = typer.Argument(None), clean_dir=True, apply=True):
 
 @app.command()
 def pull():
-    os.chdir(env().project.src_path)
+    os.chdir(project().src_path)
     result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     print(result.stdout)
 
@@ -231,7 +232,7 @@ def parse_and_rewrite(input_text):
     info = info_match.group(1).strip() if info_match else "No description provided."
 
     # Rewrite the file with the new content
-    with open(env().project.src_path / filename, 'w') as file:
+    with open(project().src_path / filename, 'w') as file:
         file.write(content)
 
 
