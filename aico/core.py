@@ -84,6 +84,9 @@ class Project:
 
     @property
     def files(self) -> list[str]:
+        """
+        Returns list of files in the source folder
+        """
         return list_dir(str(self.src_path), self.ignore)
 
     @property

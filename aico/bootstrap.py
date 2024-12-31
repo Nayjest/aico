@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -13,17 +14,21 @@ import microcore as mc
 AICO_USER_HOME = Path('~/.aico_home').expanduser().absolute()
 
 IN_AICO_MODULE_FOLDER = Path('aico').exists()
+ENV_FILE = os.getenv('ENV') or '.env'
 
 def in_project_folder() -> bool: return Path('.aico').exists()
 
 def find_env_file() -> str:
-    path = Path('.env')
+    global ENV_FILE
+    print(f"Searching for {ENV_FILE}")
+    path = Path(ENV_FILE)
     if not path.exists():
-        path = Path('.aico') / '.env'
+        path = Path('.aico') / ENV_FILE
     if not path.exists():
-        path = AICO_USER_HOME / '.env'
+        path = AICO_USER_HOME / ENV_FILE
     if not path.exists():
-        path = Path(AICO_MODULE_LOCATION) / '.env'
+        path = Path(AICO_MODULE_LOCATION) / ENV_FILE
+    print(f"ENV: {str(path.absolute().as_posix())}")
     return str(path.absolute().as_posix())
 
 def determine_storage_path() -> Path:
@@ -33,18 +38,36 @@ def determine_storage_path() -> Path:
         return Path('data')
     return AICO_USER_HOME
 
-
 def bootstrap():
+    global USE_LOGGING
     colorama.init(autoreset=True)
-    app = typer.Typer()
     mc.configure(
         STORAGE_PATH=determine_storage_path(),
-        USE_LOGGING=False,
+        USE_LOGGING=USE_LOGGING,
         DOT_ENV_FILE=find_env_file(),
         # LLM_DEFAULT_ARGS={
         #     'temperature': 0.2,
         # },
         PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
     )
-    return app
-app = bootstrap()
+
+app = typer.Typer()
+USE_LOGGING = True
+@app.callback()
+def main(
+    env: str = typer.Option(
+        None,
+        help="Specify the environment file to use (overrides default)",
+    ),
+    silent: bool = typer.Option(
+        None,
+        help="no llm output",
+    )
+):
+    global ENV_FILE, USE_LOGGING
+    if env:
+        ENV_FILE = f".env.{env}"
+        print(f"REWRITE {ENV_FILE}")
+    if silent:
+        USE_LOGGING = False
+    bootstrap()

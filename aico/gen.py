@@ -6,7 +6,8 @@ import rich
 from rich.pretty import pprint
 from colorama import Fore as C
 
-mc.use_logging()
+# mc.use_logging()
+
 
 @app.command(help="Rewrites project files with latest available backup.")
 @app.command(name='rb-files', hidden=True)
@@ -15,6 +16,7 @@ mc.use_logging()
 def rollback_files():
     from .backup import rollback_src_folder
     path = rollback_src_folder()
+
 
 @app.command(help="Rolls back last step, restores files and deletes backup")
 def rollback():
@@ -32,7 +34,9 @@ def rollback():
     mc.storage.delete(backup_path)
     return step
 
+
 @app.command(help="Redo last step")
+@app.command(name='rework', hidden=True)
 def redo():
     last_step = rollback()
     work(last_step['query'])
@@ -52,6 +56,7 @@ class ChangeList:
 
         for f in self.deleted_files:
             mc.storage.delete(f"{project().src_folder}/{f}")
+
 
 def generate_changelist(query: str):
     work_data = project().work_data
@@ -78,13 +83,14 @@ def generate_changelist(query: str):
 
     return ChangeList(files=files, deleted_files=deleted_files)
 
+
 @app.command()
 def work(
-        query: list[str] = typer.Argument(...),
-        td: bool = typer.Option(
-            False,
-            help='Ask LLM to provide technical task description for user request'
-        )
+    query: list[str] = typer.Argument(...),
+    td: bool = typer.Option(
+        False,
+        help='Ask LLM to provide technical task description for user request'
+    )
 ):
     if isinstance(query, list):
         query = " ".join(query)
@@ -125,3 +131,11 @@ def make_td(query: list[str] = typer.Argument(...)):
     ).to_llm().parse_json(required_fields=["query", "technical_task_description"])
     print(f"{C.MAGENTA}Generated Technical task description:{C.RESET}: {out['technical_task_description']}")
     return out
+
+
+@app.command()
+def ask(
+    query: list[str] = typer.Argument(...),
+):
+    out = mc.tpl('gen/ask.j2', query=query, project=project()).to_llm()
+    print(out)

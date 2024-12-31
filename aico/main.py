@@ -3,6 +3,7 @@ import threading
 import time
 import webbrowser
 from aico.git import get_logs
+from aico.stats import Stats
 from webapp.app import webapp
 
 import os
@@ -119,6 +120,10 @@ def status():
         \tstorage: {mc.config().STORAGE_PATH}
         """))
 
+@app.command(help='Shows project statistics')
+def stats():
+    stats = Stats(project())
+    pprint(stats.asdict())
 
 @app.command()
 def improve():

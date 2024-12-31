@@ -1,0 +1,12 @@
+{{ project.bot_personality }}
+
+[[BEGIN_USER_REQUEST]]
+{{ query }}
+[[END_USER_REQUEST]]
+
+{% include("gen/part/work-context.j2") %}
+
+In order to provide information to the user please use the following format:
+[[COMMENT]]
+Text content here
+[[END_COMMENT]]
