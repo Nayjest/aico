@@ -43,7 +43,16 @@ class Context:
 @dataclass
 class Project:
     src_folder: str | Path
+    """
+    Project folder relative to the storage path
+    """
+
     work_folder: str | Path
+    """
+    AICO work folder relative to the storage path
+    (stores AICO metadata, backups, etc.)
+    """
+
     ignore: list[str]
     bot_personality: str = ""
 
@@ -85,7 +94,7 @@ class Project:
     @property
     def files(self) -> list[str]:
         """
-        Returns list of files in the source folder
+        Returns list of files in the source folder without ignored
         """
         return list_dir(str(self.src_path), self.ignore)
 
