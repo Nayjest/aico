@@ -1,10 +1,12 @@
-from .bootstrap import AICO_USER_HOME, IN_AICO_MODULE_FOLDER
 import logging
-import microcore as mc
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
+
+import microcore as mc
+from microcore.file_storage import Storage
 from colorama import Fore as C
 
+from .bootstrap import AICO_USER_HOME, IN_AICO_MODULE_FOLDER
 from .const import WORK_FOLDER, DEFAULT_IGNORE
 from .utils import list_dir
 
@@ -28,7 +30,7 @@ class Context:
 
     @staticmethod
     def load():
-        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else mc.storage(AICO_USER_HOME)
+        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else Storage(AICO_USER_HOME)
         params = ctx_storage.read_json('context.json')
         params['project_root'] = Path(params['project_root'])
         params['code_review'] = CodeReviewSettings(**params.get('code_review', {}))
