@@ -3,3 +3,7 @@ ai-microcore/*
 .env
 data/*
 .aico/*
+*__pycache__/*
+.idea/
+.venv
+venv
