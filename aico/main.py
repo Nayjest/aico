@@ -93,13 +93,15 @@ def new_project(
     use(name)
     print(f"Done.")
 
-@app.command()
+@app.command(help="list project files (without ignored)")
 @app.command(name='files-list',hidden=True)
 def list_files():
-    rich.print(project().files)
+    files = project().files
+    rich.print(files)
+    print(f"Total: {len(files)} files")
 
 
-@app.command()
+@app.command(help="Generates additional project metadata in <.aico>/meta.json using LLM")
 def describe():
     q = mc.tpl('describe.j2', project=project())
     out = mc.llm(q, callback=lambda text: print(text, end=''))
@@ -107,7 +109,7 @@ def describe():
     print("Metadata saved")
     # mc.tpl('collect-meta.j2', input = mc.tpl('')).to_llm(
 
-@app.command()
+@app.command(help="Shows configuration of current project")
 def status():
     project()
     try:
