@@ -1,8 +1,8 @@
 # AICO: AI Coder
 
 ## Overview
-Command-line AI assistant for software engineering
-
+Command-line AI assistant for software engineering.
+Works through OpenAI / Anthropic / Google LLM API or directly using PyTorch for inference
 
 ## Installation
 
