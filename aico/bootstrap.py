@@ -47,6 +47,7 @@ def bootstrap():
         DOT_ENV_FILE=find_env_file(),
         PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
     )
+    mc.logging.LoggingConfig.STRIP_REQUEST_LINES = None
 
 app = typer.Typer()
 USE_LOGGING = True

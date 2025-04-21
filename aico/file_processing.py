@@ -1,7 +1,6 @@
 import json
-import time
 from pathlib import Path
-
+import time
 import rich
 from colorama import Fore as C
 from openai import APIError
@@ -299,5 +298,3 @@ def self_estimate_changes(structured_result_fn, rewrite = True):
     if rewrite:
         mc.storage.write_json(structured_result_fn, structured_result, backup_existing=False)
     return structured_result
-
-
