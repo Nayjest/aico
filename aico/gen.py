@@ -2,11 +2,8 @@ from dataclasses import dataclass
 
 from .bootstrap import *
 from .core import project
-import rich
 from rich.pretty import pprint
 from colorama import Fore as C
-
-# mc.use_logging()
 
 
 @app.command(help="Rewrites project files with latest available backup.")
@@ -24,10 +21,15 @@ def rollback():
     step = wd["steps"][-1]
 
     print(f"Rolling back step:")
-    pprint(pprint(step))
+    pprint(step)
 
     wd["steps"] = wd["steps"][:-1]
     project().save_work_data(wd)
+    # Delete files edited or created in last step
+    # Because created files will not be removed by rollback_files()
+    for f in step["files"]:
+        print(f"Deleting {f}...")
+        mc.storage.delete(f"{project().src_folder}/{f}")
     rollback_files()
     backup_path = step["created_backup"]
     print(f"Deleting backup {backup_path}")
