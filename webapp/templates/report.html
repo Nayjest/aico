@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">AI Code Review Report</h1>
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" id="allChangesTab">All Changes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="acceptedChangesTab">Accepted Changes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="rejectedChangesTab">Rejected Changes</a>
+            </li>
+        </ul>
+        {% for item in report_items %}
+        <div class="card mb-3" data-decision="{{ item.get('estimation', {}).get('decision', 'Accept') }} ">
+            <div class="card-header {{ 'rejected' if  'reject' in item.estimation.decision.lower() else 'accepted' | default('accepted', true) }}">
+                <h2 class="h5">
+                    #{{ item.pop('number') }} {{ item.pop('short_info') }}
+                </h2>
+                <span class="badge badge-secondary badge-info">{{ item.pop('type') }}</span>
+            </div>
+            <div class="card-body">
+                <p><strong>File Name:</strong> {{ item.pop('file_name') }}</p>
+                {% if 'motivation' in item %}<p><strong>Motivation:</strong> {{ item.pop('motivation') }}</p>{% endif %}
+                {% if 'drawbacks' in item %}<p><strong>Drawbacks:</strong> {{ item.pop('drawbacks') }}</p>{% endif %}
+                <ul class="nav nav-tabs" id="reportTab" role="tablist">
+                    {% if 'diff' in item %}
+                    <li class="nav-item">
+                        <a class="nav-link active" id="diff-tab" data-toggle="tab" href="#diff{{ loop.index }}" role="tab" aria-controls="diff" aria-selected="true">Diff</a>
+                    </li>
+                    {% endif %}
+                    {% if 'implementation_details' in item %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="implementation-tab" data-toggle="tab" href="#implementation{{ loop.index }}" role="tab" aria-controls="implementation" aria-selected="false">Implementation Details</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="other-details-tab" data-toggle="tab" href="#other-details{{ loop.index }}" role="tab" aria-controls="other-details" aria-selected="false">Other Details</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="reportTabContent">
+                    {% if 'diff' in item %}
+                    <div class="tab-pane fade show active" id="diff{{ loop.index }}" role="tabpanel" aria-labelledby="diff-tab">
+                        <div class="diff-container">
+                            <pre class="diff-highlight">{{ item.pop('diff') }}</pre>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if 'implementation_details' in item %}
+                    <div class="tab-pane fade" id="implementation{{ loop.index }}" role="tabpanel" aria-labelledby="implementation-tab">
+                        <pre class="implementation-details">{{ item.pop('implementation_details') }}</pre>
+                    </div>
+                    {% endif %}
+                    <div class="tab-pane fade" id="other-details{{ loop.index }}" role="tabpanel" aria-labelledby="other-details-tab">
+                        <pre class="json-highlight">{{ item | tojson(indent=2) }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+</body>
+</html>
