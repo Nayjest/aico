@@ -1,6 +1,6 @@
-chromadb
-ai-microcore>=3.16.0,<4
-patch
+chromadb==1.0.5
+ai-microcore==4.0.0.dev2
+patch==1.16.0
 flask==3.1.0 # 2.1.2
-rich
+rich==13.9.4
 typer>=0.15.1,<0.16
