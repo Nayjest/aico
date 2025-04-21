@@ -27,7 +27,12 @@ def get_last_backup_folder()-> Path | None:
 def backup_src_folder() -> Path:
     bckp_folder = get_next_backup_folder()
     print(f"Backing up src folder into {mc.storage.file_link(bckp_folder)}")
-    ignore = project().ignore + [f"{i}*" for i in project().ignore]
+    ignore = (
+        project().ignore
+        + [f"{i}*" for i in project().ignore]
+        # @todo: add possibility to configure ignore patterns with * on project level
+        + ["*.pyc", "*__pycache__*"]
+    )
     mc.storage.copy(
         project().src_folder,
         bckp_folder, ignore
