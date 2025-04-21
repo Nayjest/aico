@@ -6,6 +6,7 @@ Works through OpenAI / Anthropic / Google LLM API or directly using PyTorch for 
 
 ## Installation
 
+Requirements: Python 3.11+
 
 ## Configuration
 
