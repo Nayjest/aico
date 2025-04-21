@@ -6,7 +6,7 @@ import colorama
 import typer
 
 AICO_MODULE_LOCATION = Path(__file__).parent.parent
-if (AICO_MODULE_LOCATION / 'ai-microcore').exists():
+if (AICO_MODULE_LOCATION / 'ai-microcore').exists():  # self-dev. feature
     sys.path.insert(0, (AICO_MODULE_LOCATION / 'ai-microcore').absolute().as_posix())
 
 import microcore as mc
@@ -63,8 +63,8 @@ def main(
 ):
     global ENV_FILE, USE_LOGGING
     if env:
-        ENV_FILE = f".env.{env}"
-        print(f"REWRITE {ENV_FILE}")
+        ENV_FILE = f".env.{env}" if ".env." not in env else env
+        print(f"OVERRIDE {ENV_FILE}")
     if silent:
         USE_LOGGING = False
     bootstrap()
