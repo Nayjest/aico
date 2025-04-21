@@ -1,3 +1,4 @@
+from aico.backup import backup_src_folder
 from aico.bootstrap import app, in_project_folder
 import threading
 import time
@@ -216,6 +217,10 @@ def pull():
     result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     print(result.stdout)
 
+@app.command()
+def backup():
+    os.chdir(project().src_path)
+    backup_src_folder()
 
 def parse_and_rewrite(input_text):
     # Regular expressions for extracting sections
