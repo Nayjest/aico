@@ -2,7 +2,7 @@
 
 ## Overview
 Command-line AI assistant for software engineering.
-Works through OpenAI / Anthropic / Google LLM API or directly using PyTorch for inference
+Works through OpenAI / Anthropic / Google LLM API or directly using PyTorch for inference.
 
 ## Installation
 
