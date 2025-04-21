@@ -21,13 +21,13 @@ def in_project_folder() -> bool: return Path('.aico').exists()
 def find_env_file() -> str:
     global ENV_FILE
     print(f"Searching for {ENV_FILE}")
-    path = Path(ENV_FILE)
+    path = Path(AICO_MODULE_LOCATION) / ENV_FILE
     if not path.exists():
         path = Path('.aico') / ENV_FILE
     if not path.exists():
         path = AICO_USER_HOME / ENV_FILE
     if not path.exists():
-        path = Path(AICO_MODULE_LOCATION) / ENV_FILE
+        path = Path(ENV_FILE)
     print(f"ENV: {str(path.absolute().as_posix())}")
     return str(path.absolute().as_posix())
 
@@ -45,9 +45,6 @@ def bootstrap():
         STORAGE_PATH=determine_storage_path(),
         USE_LOGGING=USE_LOGGING,
         DOT_ENV_FILE=find_env_file(),
-        # LLM_DEFAULT_ARGS={
-        #     'temperature': 0.2,
-        # },
         PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
     )
 
