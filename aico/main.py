@@ -19,6 +19,7 @@ import typer
 from colorama import Fore as C
 import rich
 import aico.gen
+from microcore import ui
 from rich.pretty import pprint
 
 
@@ -58,7 +59,13 @@ def new_project(
         return
     if here is None:
         if not in_project_folder():
-            here = mc.ui.ask_yn("Create project here?")
+            here = mc.ui.ask_yn(
+                f"Initialize new project in current folder {mc.utils.file_link(Path.cwd())}?"
+                f"\n{ui.gray('(otherwise AICO data folder will be used)\n')}"
+            )
+            if here is None:
+                mc.ui.error("Exiting.")
+                return
     if here:
         name = name or Path.cwd().name
     if not name:

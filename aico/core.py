@@ -1,12 +1,13 @@
 import logging
+import os
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 import microcore as mc
-from microcore.file_storage import Storage
+from microcore import ui
 from colorama import Fore as C
 
-from .bootstrap import AICO_USER_HOME, IN_AICO_MODULE_FOLDER
+from .bootstrap import AICO_USER_HOME, IN_AICO_MODULE_FOLDER, in_project_folder
 from .const import WORK_FOLDER, DEFAULT_IGNORE
 from .utils import list_dir
 
@@ -30,9 +31,20 @@ class Context:
 
     @staticmethod
     def load():
-        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else Storage(AICO_USER_HOME)
-        params = ctx_storage.read_json('context.json')
-        params['project_root'] = Path(params['project_root'])
+        if IN_AICO_MODULE_FOLDER and not in_project_folder():
+            ctx_storage = mc.storage
+        else:
+            ctx_storage = mc.storage(AICO_USER_HOME)
+
+        params = ctx_storage.read_json('context.json', default={})
+        if "project_root" not in params:
+            if in_project_folder():
+                params["project_root"] = os.getcwd()
+            else:
+                ui.warning("Project root not found")
+
+        if "project_root" in params:
+            params['project_root'] = Path(params['project_root'])
         params['code_review'] = CodeReviewSettings(**params.get('code_review', {}))
         params['generation'] = GenerationSettings(**params.get('generation', {}))
         return Context(**params)
@@ -142,7 +154,7 @@ class Project:
 
     @staticmethod
     def make(name: str, **kwargs):
-        if IN_AICO_MODULE_FOLDER:
+        if IN_AICO_MODULE_FOLDER and name not in ["aico", "ai-coder"]:
             args = {
                 "src_folder": name,
                 "work_folder": f"{name}/{WORK_FOLDER}",
