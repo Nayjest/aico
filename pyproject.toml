@@ -18,3 +18,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 aico = "aico.main:app"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-vv --capture=no --log-cli-level=INFO"
+testpaths = [
+    "tests",
+]

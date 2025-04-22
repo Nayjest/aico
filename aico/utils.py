@@ -1,15 +1,21 @@
 import fnmatch
-import os
+from pathlib import Path
 
 
-def list_dir(path: str, ignore=None) -> list[str]:
-    if ignore is None:
-        ignore = ['.git', ]
-    files_list = []
-    for root, dir, files in os.walk(path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            if not any(fnmatch.fnmatch(file_path, '*' + p + '*') for p in ignore):
-                files_list.append(file_path.replace(str(path) + os.sep, '').replace(os.sep, '/'))
-    return files_list
-
+def list_dir(path: str | Path, ignore: list[str] | None = None) -> list[str]:
+    ignore = ignore or ['.git']
+    root = Path(path).expanduser().resolve()
+    def _skip(rel: str, name: str) -> bool:
+        return any(
+            fnmatch.fnmatchcase(rel, p)
+            or fnmatch.fnmatchcase(rel, f"{p}/*")
+            or fnmatch.fnmatchcase(rel, f"*/{p}")
+            or fnmatch.fnmatchcase(rel, f"*/{p}/*")
+            or fnmatch.fnmatchcase(name, p)
+            for p in ignore
+        )
+    return sorted(
+        rel
+        for f in root.rglob('*') if f.is_file()
+        if not _skip((rel := f.relative_to(root).as_posix()), f.name)
+    )
