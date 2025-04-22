@@ -11,19 +11,21 @@ if (AICO_MODULE_LOCATION / 'ai-microcore').exists():  # self-dev. feature
 
 import microcore as mc
 
+from aico.const import WORK_FOLDER
+
 AICO_USER_HOME = Path('~/.aico_home').expanduser().absolute()
 
 IN_AICO_MODULE_FOLDER = Path('aico').exists()
 ENV_FILE = os.getenv('ENV') or '.env'
 
-def in_project_folder() -> bool: return Path('.aico').exists()
+def in_project_folder() -> bool: return Path(WORK_FOLDER).exists()
 
 def find_env_file() -> str:
     global ENV_FILE
     print(f"Searching for {ENV_FILE}")
     path = Path(AICO_MODULE_LOCATION) / ENV_FILE
     if not path.exists():
-        path = Path('.aico') / ENV_FILE
+        path = Path(WORK_FOLDER) / ENV_FILE
     if not path.exists():
         path = AICO_USER_HOME / ENV_FILE
     if not path.exists():
@@ -46,6 +48,7 @@ def bootstrap():
         USE_LOGGING=USE_LOGGING,
         DOT_ENV_FILE=find_env_file(),
         PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
+        EMBEDDING_DB_FOLDER= f"{WORK_FOLDER}/chroma",
     )
     mc.logging.LoggingConfig.STRIP_REQUEST_LINES = None
 

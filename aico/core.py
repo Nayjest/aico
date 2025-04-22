@@ -30,13 +30,15 @@ class Context:
     generation: GenerationSettings = field(default=None)
 
     @staticmethod
-    def load():
-        if IN_AICO_MODULE_FOLDER and not in_project_folder():
-            ctx_storage = mc.storage
+    def _storage():
+        if IN_AICO_MODULE_FOLDER:
+            return mc.storage('data')
         else:
-            ctx_storage = mc.storage(AICO_USER_HOME)
+            return mc.storage(AICO_USER_HOME)
 
-        params = ctx_storage.read_json('context.json', default={})
+    @staticmethod
+    def load():
+        params = Context._storage().read_json('context.json', default={})
         if "project_root" not in params:
             if in_project_folder():
                 params["project_root"] = os.getcwd()
@@ -50,8 +52,7 @@ class Context:
         return Context(**params)
 
     def save(self):
-        ctx_storage = mc.storage if IN_AICO_MODULE_FOLDER else mc.storage(AICO_USER_HOME)
-        ctx_storage.write_json('context.json', asdict(self), backup_existing=False)
+        Context._storage().write_json('context.json', asdict(self), backup_existing=False)
 
 
 @dataclass
