@@ -10,7 +10,7 @@ from microcore import ui
 def test():
     # get temp dir for tests on FS
     tests_root = Path(__file__).parent.parent
-    temp_dir= tests_root / 'temp'
+    temp_dir = tests_root / 'temp' / 'list_dir_test'
     shutil.rmtree(temp_dir, ignore_errors=True)
     temp_dir.mkdir(exist_ok=True)
     (temp_dir / 'dir1').mkdir()
@@ -37,4 +37,4 @@ def test():
     assert len(list_dir(temp_dir, ignore=['file'])) == 7
 
 
-    shutil.rmtree(temp_dir, ignore_errors=True)
+    shutil.rmtree(tests_root / 'temp', ignore_errors=True)
