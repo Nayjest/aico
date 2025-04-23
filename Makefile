@@ -26,10 +26,16 @@ install:
 py:
 	python -i -c "from aico.main import *; import sys; sys.displayhook = lambda x: exec(['_=x; pprint(x)','pass'][x is None])"
 
-
 pkg:
-	$(DEXEC) python -m build --wheel --sdist .
+	python -m poetry build
+
+clean-dist:
+	python -c "import shutil, os; shutil.rmtree('dist', ignore_errors=True); os.makedirs('dist', exist_ok=True)"
+clear-dist: clean-dist
+cln-dist: clean-dist
+clr-dist: clean-dist
 
 publish:
-	$(DEXEC) twine upload dist/* -u __token__ -p $(PYPI_TOKEN) --verbose
+	python publish.py
+
 upload: publish

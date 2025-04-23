@@ -7,3 +7,5 @@ pylint
 pdoc
 watchdog
 pyflakes
+poetry
+twine
