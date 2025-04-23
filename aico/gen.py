@@ -3,8 +3,7 @@ from dataclasses import dataclass
 from .bootstrap import *
 from .core import project
 from rich.pretty import pprint
-from colorama import Fore as C
-
+from microcore import ui
 
 @app.command(help="Rewrites project files with latest available backup.")
 @app.command(name='rb-files', hidden=True)
@@ -104,7 +103,7 @@ def work(
         original_user_query = query
     changes = generate_changelist(query)
     if changes.is_empty():
-        print(f"{C.RED}No changes detected, exiting{C.RESET}")
+        print(f"{ui.red}No changes detected, exiting")
 
     from .backup import backup_src_folder
     created_backup: Path = backup_src_folder()
@@ -131,7 +130,7 @@ def make_td(query: list[str] = typer.Argument(...)):
         project=project(),
         steps=work_data['steps']
     ).to_llm().parse_json(required_fields=["query", "technical_task_description"])
-    print(f"{C.MAGENTA}Generated Technical task description:{C.RESET}: {out['technical_task_description']}")
+    print(f"{ui.magenta}Generated Technical task description:{ui.reset}: {out['technical_task_description']}")
     return out
 
 
