@@ -5,7 +5,6 @@ import time
 import webbrowser
 from aico.git import get_logs
 from aico.stats import Stats
-from webapp.app import webapp
 
 import os
 import subprocess
@@ -262,6 +261,8 @@ def open_browser():
 
 @app.command()
 def report():
+    # Dynamically import webapp only when needed to avoid distribution issues
+    from webapp.app import webapp
     threading.Thread(target=open_browser, daemon=True).start()
     webapp.run(debug=False, use_reloader=False)
 
