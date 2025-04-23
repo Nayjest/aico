@@ -1,5 +1,5 @@
-from aico.backup import backup_src_folder
 from aico.bootstrap import app, in_project_folder
+from aico.backup import backup_src_folder
 import threading
 import time
 import webbrowser
