@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set PYTHONPATH=%~dp0..
-python -m aico "$@"

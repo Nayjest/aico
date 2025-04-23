@@ -1,27 +1,25 @@
+from aico.const import (
+    WORK_FOLDER,
+    AICO_MODULE_LOCATION,
+    AICO_USER_HOME,
+    IN_AICO_MODULE_FOLDER
+)
+
 import os
-import sys
 from pathlib import Path
 
 import colorama
 import typer
-
-AICO_MODULE_LOCATION = Path(__file__).parent.parent
-if (AICO_MODULE_LOCATION / 'ai-microcore').exists():  # self-dev. feature
-    sys.path.insert(0, (AICO_MODULE_LOCATION / 'ai-microcore').absolute().as_posix())
-
 import microcore as mc
+from microcore import ui
 
-from aico.const import WORK_FOLDER
+from aico.cli_ui import interactive_configure
 
-AICO_USER_HOME = Path('~/.aico_home').expanduser().absolute()
-
-IN_AICO_MODULE_FOLDER = Path('aico').exists()
-ENV_FILE = os.getenv('ENV') or '.env'
+ENV_FILE = os.getenv('AICO_ENV_FILE') or '.env'
 
 def in_project_folder() -> bool: return Path(WORK_FOLDER).exists()
 
 def find_env_file() -> str:
-    global ENV_FILE
     print(f"Searching for {ENV_FILE}")
     path = Path(AICO_MODULE_LOCATION) / ENV_FILE
     if not path.exists():
@@ -30,6 +28,8 @@ def find_env_file() -> str:
         path = AICO_USER_HOME / ENV_FILE
     if not path.exists():
         path = Path(ENV_FILE)
+    if not path.exists():
+        raise mc.LLMConfigError(f"Can't find configuration file ({ENV_FILE})")
     print(f"ENV: {str(path.absolute().as_posix())}")
     return str(path.absolute().as_posix())
 
@@ -43,14 +43,23 @@ def determine_storage_path() -> Path:
 def bootstrap():
     global USE_LOGGING
     colorama.init(autoreset=True)
-    mc.configure(
-        STORAGE_PATH=determine_storage_path(),
-        USE_LOGGING=USE_LOGGING,
-        DOT_ENV_FILE=find_env_file(),
-        PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
-        EMBEDDING_DB_FOLDER= f"{WORK_FOLDER}/chroma",
-    )
-    mc.logging.LoggingConfig.STRIP_REQUEST_LINES = None
+    try:
+        mc.configure(
+            STORAGE_PATH=determine_storage_path(),
+            USE_LOGGING=USE_LOGGING,
+            DOT_ENV_FILE=find_env_file(),
+            PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
+            EMBEDDING_DB_FOLDER= f"{WORK_FOLDER}/chroma",
+        )
+        mc.logging.LoggingConfig.STRIP_REQUEST_LINES = None
+    except mc.LLMConfigError as e:
+        ui.error(e)
+        if ui.ask_yn("Do you want to configure AICO now?", default=False):
+            interactive_configure(AICO_USER_HOME / ENV_FILE)
+        else:
+            ui.error("Please, configure AICO using .env file")
+        exit()
+
 
 app = typer.Typer()
 USE_LOGGING = True

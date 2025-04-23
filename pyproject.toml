@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aico-cli"
-version = "0.1.1"
+version = "0.1.2"
 description = "AI coding assistant"
 authors = ["Nayjest <mail@vitaliy.in>"]
 readme = "README.md"
@@ -15,6 +15,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Code Generators",
 ]
 packages = [
