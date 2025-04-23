@@ -69,7 +69,7 @@ def generate_changelist(query: str):
             parts = out.split('[[BEGIN_FILE]]\n')[1:]
             parts = [i.split('[[END_FILE]]')[0] for i in parts]
             files = [
-                mc.parse(i, r"\[(.*?)\]", required_fields=['file_path', 'file_content'])
+                mc.parse(i, r"\[(FILE_.*?)\]", required_fields=['file_path', 'file_content'])
                 for i in parts
             ]
 
@@ -107,6 +107,8 @@ def work(
 
     from .backup import backup_src_folder
     created_backup: Path = backup_src_folder()
+    print(f"Changes:")
+    pprint(changes)
     changes.apply()
 
     work_data = project().work_data
