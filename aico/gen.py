@@ -107,6 +107,7 @@ def work(
 
     from .backup import backup_src_folder
     created_backup: Path = backup_src_folder()
+    # pprint(changes)
     changes.apply()
 
     work_data = project().work_data

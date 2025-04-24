@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "aico-cli"
-version = "0.1.3"
+version = "0.1.4"
 description = "AI coding assistant"
 authors = ["Nayjest <mail@vitaliy.in>"]
 readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/Nayjest/aico"
 repository = "https://github.com/Nayjest/aico"
-keywords = ["ai", "coding", "assistant", "llm"]
+keywords = ["ai", "coding", "assistant", "llm", "vibe-coding"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -21,9 +21,6 @@ classifiers = [
 ]
 packages = [
     { include = "aico", from = "." },
-]
-include = [
-    "tpl/**/*",
 ]
 
 [tool.poetry.dependencies]

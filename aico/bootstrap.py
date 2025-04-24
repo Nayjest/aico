@@ -48,7 +48,7 @@ def bootstrap():
             STORAGE_PATH=determine_storage_path(),
             USE_LOGGING=USE_LOGGING,
             DOT_ENV_FILE=find_env_file(),
-            PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'tpl',
+            PROMPT_TEMPLATES_PATH=AICO_MODULE_LOCATION / 'aico' / 'tpl',
             EMBEDDING_DB_FOLDER= f"{WORK_FOLDER}/chroma",
         )
         mc.logging.LoggingConfig.STRIP_REQUEST_LINES = None
