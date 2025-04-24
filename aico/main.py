@@ -1,8 +1,10 @@
-from aico.bootstrap import app, in_project_folder
+from aico.bootstrap import app, in_project_folder, ENV_FILE
 from aico.backup import backup_src_folder
 import threading
 import time
 import webbrowser
+
+from aico.cli_ui import interactive_configure
 from aico.git import get_logs
 from aico.stats import Stats
 
@@ -35,6 +37,9 @@ def use(project_name: str):
 
     print(mc.utils.file_link(f"{p.src_path}"))
 
+@app.command(name='configure', help="Configure the Language model", hidden=True)
+def cli_configure():
+    interactive_configure(AICO_USER_HOME / ENV_FILE)
 
 @app.command(name='new_project', help="Alias of new-project", hidden=True)
 @app.command(name='create-project', help="Alias of new-project", hidden=True)

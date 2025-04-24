@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aico-cli"
-version = "0.1.2"
+version = "0.1.3"
 description = "AI coding assistant"
 authors = ["Nayjest <mail@vitaliy.in>"]
 readme = "README.md"
