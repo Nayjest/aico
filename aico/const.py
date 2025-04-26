@@ -6,7 +6,7 @@ DEFAULT_IGNORE = [
     WORK_FOLDER,
     '.git',
     '__pycache__',
-    '.idea/',
+    '.idea',
     'venv',
     '.pytest_cache',
     '.coverage',
