@@ -65,7 +65,7 @@ def new_project(
         if not in_project_folder():
             here = mc.ui.ask_yn(
                 f"Initialize new project in current folder {mc.utils.file_link(Path.cwd())}?\n"
-                +ui.gray('(otherwise AICO data folder will be used)\n')
+                + ui.gray('(otherwise AICO data folder will be used)\n')
             )
             if here is None:
                 mc.ui.error("Exiting.")
